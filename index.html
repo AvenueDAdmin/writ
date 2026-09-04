@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Writ — The authorization receipt for agent actions</title>
+  <meta name="description" content="Writ issues the authorization receipt when an AI agent leaves the model and writes into a system of record. Built on Palantir AIP." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0b0a;
+      --paper: #ebe6d8;
+      --mute: #9a9486;
+      --line: #2a2824;
+      --bronze: #c4a574;
+      --danger: #c45c3a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg); color: var(--paper); }
+    body {
+      font-family: "Newsreader", "Times New Roman", serif;
+      font-size: 19px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--bronze); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 0 28px; }
+    header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 28px 0 48px; border-bottom: 1px solid var(--line);
+    }
+    .mark {
+      font-family: "Instrument Serif", serif;
+      font-size: 28px; letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .mark span { color: var(--bronze); }
+    nav { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mute); }
+    nav a { color: var(--mute); margin-left: 22px; }
+    h1 {
+      font-family: "Instrument Serif", serif;
+      font-weight: 400;
+      font-size: clamp(40px, 7vw, 72px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      padding: 72px 0 28px;
+    }
+    h1 em { font-style: italic; color: var(--bronze); }
+    .lede { max-width: 640px; color: var(--mute); font-size: 22px; padding-bottom: 72px; }
+    h2 {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--bronze); margin-bottom: 18px;
+    }
+    section { padding: 56px 0; border-top: 1px solid var(--line); }
+    .objects { display: grid; grid-template-columns: 1fr; gap: 28px; }
+    @media (min-width: 720px) { .objects { grid-template-columns: 1fr 1fr 1fr; } }
+    article h3 {
+      font-family: "Instrument Serif", serif;
+      font-size: 28px; font-weight: 400; margin-bottom: 10px;
+    }
+    article p { color: var(--mute); font-size: 17px; }
+    .num { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--bronze); display: block; margin-bottom: 8px; }
+    .verbs { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .verb {
+      font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.08em;
+      text-transform: uppercase; border: 1px solid var(--line); padding: 8px 12px; color: var(--paper);
+    }
+    .instrument {
+      border: 1px solid var(--line);
+      padding: 28px 28px 22px;
+      background: #11110f;
+      margin-top: 28px;
+    }
+    .instrument header {
+      border: 0; padding: 0 0 16px; margin: 0;
+      font-family: "IBM Plex Mono", monospace; font-size: 11px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute);
+    }
+    .instrument dl { display: grid; grid-template-columns: 140px 1fr; gap: 8px 16px; font-size: 16px; }
+    .instrument dt { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mute); padding-top: 4px; }
+    .instrument dd { color: var(--paper); }
+    .stamp {
+      margin-top: 22px; display: inline-block;
+      border: 1px solid var(--danger); color: var(--danger);
+      font-family: "IBM Plex Mono", monospace; font-size: 11px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 6px 10px; transform: rotate(-6deg);
+    }
+    .team { display: grid; gap: 32px; }
+    @media (min-width: 720px) { .team { grid-template-columns: 1fr 1fr; } }
+    .team h3 { font-family: "Instrument Serif", serif; font-size: 26px; font-weight: 400; }
+    .team p { color: var(--mute); font-size: 17px; margin-top: 8px; }
+    footer {
+      padding: 48px 0 72px; border-top: 1px solid var(--line);
+      font-family: "IBM Plex Mono", monospace; font-size: 11px;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--mute);
+      display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="mark">Writ<span>.</span></div>
+      <nav>
+        <a href="#instrument">Instrument</a>
+        <a href="#aip">AIP</a>
+        <a href="#team">Team</a>
+      </nav>
+    </header>
+
+    <h1>A writ for the action<br>that <em>cannot be undone.</em></h1>
+    <p class="lede">When an agent leaves the chat and writes into a system of record, someone has to authorize it. Writ is that instrument: principal, decision, receipt.</p>
+
+    <section>
+      <h2>Three objects</h2>
+      <div class="objects">
+        <article>
+          <span class="num">01</span>
+          <h3>Principal</h3>
+          <p>Human sponsor, agent, task, and purpose — bound together. Not a service account with a prettier name.</p>
+        </article>
+        <article>
+          <span class="num">02</span>
+          <h3>Decision</h3>
+          <p>Allow, step-up, or deny at the moment an Action or tool is about to fire. Short-lived. Audience-bound. Revocable.</p>
+        </article>
+        <article>
+          <span class="num">03</span>
+          <h3>Receipt</h3>
+          <p>An immutable record on the ontology: who, what, on which object, under which purpose, with which policy version.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>The verbs</h2>
+      <p style="max-width:640px;color:var(--mute)">We do not sell agent SSO. Okta ships that free. We sit on the verbs a regulator, a casino, or a sponsor will ask about after the fact.</p>
+      <div class="verbs">
+        <span class="verb">verify</span>
+        <span class="verb">refund</span>
+        <span class="verb">provision</span>
+        <span class="verb">admit</span>
+        <span class="verb">prescribe</span>
+      </div>
+    </section>
+
+    <section id="instrument">
+      <h2>The instrument</h2>
+      <div class="instrument">
+        <header>Writ No. 0001 &nbsp;·&nbsp; Ontology object &nbsp;·&nbsp; Restricted marking</header>
+        <dl>
+          <dt>Sponsor</dt><dd>Investigator, site 4418</dd>
+          <dt>Agent</dt><dd>AIP Logic / protocol-intake-04</dd>
+          <dt>Purpose</dt><dd>Confirm unique human before provisioning study access</dd>
+          <dt>Action</dt><dd>Foundry Action <em>provision_site_user</em></dd>
+          <dt>Decision</dt><dd>ALLOW &nbsp;·&nbsp; 90-second token &nbsp;·&nbsp; aud=foundry.action</dd>
+          <dt>Receipt</dt><dd>Committed 2026-12-04T16:11:03Z &nbsp;·&nbsp; policy v12</dd>
+        </dl>
+        <div class="stamp">Kill switch armed</div>
+      </div>
+    </section>
+
+    <section id="aip">
+      <h2>Why Palantir AIP</h2>
+      <p style="max-width:680px;color:var(--mute)">Inside Foundry, agents are already principals with markings. The hole is the last mile: user token versus service identity versus on-behalf-of, and the hop out of Foundry into a clinical app, a checkout API, or an IdP. We build the receipt as ontology objects and hook it at Action time. Then we take it across the garden over MCP.</p>
+      <p style="max-width:680px;color:var(--mute);margin-top:16px">Cisco bought the inventory. Cyera bought the data graph. Palantir has not bought this layer. We are building it on the platform, not next to it.</p>
+    </section>
+
+    <section id="team">
+      <h2>Founders</h2>
+      <div class="team">
+        <div>
+          <h3>Chad Dyar</h3>
+          <p>Product and deployment. Staff TPM at ID.me; founded the forward-deployed function on a federal identity book. Clinical-trial SSO across a sponsor’s regulated apps. Identity at hospitality check-in. Raytheon cloud-enablement at a federal boundary. Co-founded Theraputix (NIH/NSF). New York.</p>
+        </div>
+        <div>
+          <h3>Karishma Bhatia</h3>
+          <p>Engineering. Georgia Tech MS CS (AI). Technical lead at Nike; technical lead at Alexander Wang; full-stack at Ralph Lauren. Built the live Prince commerce stack. The fellowship’s full-time developer. New York.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>Prince Technologies, Inc. &nbsp;·&nbsp; Delaware &nbsp;·&nbsp; d/b/a Writ</div>
+      <div><a href="mailto:Chad.Dyar@gmail.com">Chad.Dyar@gmail.com</a></div>
+    </footer>
+  </div>
+</body>
+</html>
